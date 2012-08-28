@@ -39,7 +39,7 @@ public class SearchTable {
 
 		String table = "article";
 
-		String queries = "深圳珠宝行业缔造诚信自律公约";
+		String queries = "北京欢迎尔";
 
 		String[] colNames = { "title", "content" };
 
