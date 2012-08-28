@@ -27,7 +27,7 @@ import org.apache.lucene.util.Version;
  */
 public class SearchTable {
 
-	public final static int TOP_DOCS = 1000; // 返回符合条件的最多记录数默认值
+	public final static int TOP_DOCS = 100; // 返回符合条件的最多记录数默认值
 
 	public static void main(String[] args) throws Exception {
 
