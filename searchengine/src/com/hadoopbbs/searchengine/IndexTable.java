@@ -141,7 +141,9 @@ public class IndexTable {
 		// buffer. But if you do this, increase the max heap
 		// size to the JVM (eg add -Xmx512m or -Xmx1g):
 		//
-		// iwc.setRAMBufferSizeMB(256.0);
+
+		iwc.setRAMBufferSizeMB(256);
+
 		IndexWriter writer = new IndexWriter(dir, iwc);
 
 		index(writer, table, colNames, keyName, keyStart, rowCount);
@@ -190,7 +192,7 @@ public class IndexTable {
 
 				// 如果是html内容，使用下面两行转换为纯文本内容
 				html = Jsoup.parse(colValues[i]);
-				
+
 				colValues[i] = html.text();
 
 				// System.out.println(colValues[i]);
