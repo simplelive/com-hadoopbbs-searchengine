@@ -19,6 +19,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.jsoup.Jsoup;
 
 import com.hadoopbbs.database.Database;
 
@@ -36,8 +37,6 @@ public class IndexTable {
 
 	public static void main(String[] args) throws IOException, SQLException {
 
-		System.out.println("index start ...");
-
 		IndexTable index = new IndexTable();
 
 		String indexBase = "d:/index";
@@ -47,6 +46,8 @@ public class IndexTable {
 		String keyName = "id";
 
 		String[] colNames = { "title", "content" };
+
+		System.out.println(table + " index start ...");
 
 		long start = System.currentTimeMillis();
 
@@ -181,9 +182,18 @@ public class IndexTable {
 
 		doc.add(keyField);
 
+		org.jsoup.nodes.Document html = null;
+
 		for (int i = 0; i < colNames.length; i++) {
 
 			if (colNames[i] != null && colValues[i] != null) {
+
+				// 如果是html内容，使用下面两行转换为纯文本内容
+				html = Jsoup.parse(colValues[i]);
+				
+				colValues[i] = html.text();
+
+				// System.out.println(colValues[i]);
 
 				// 字段内容
 				Field colField = new Field(colNames[i].toLowerCase(), colValues[i], Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.NO);
