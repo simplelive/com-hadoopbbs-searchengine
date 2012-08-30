@@ -2,6 +2,8 @@ package com.hadoopbbs.searchengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
@@ -17,6 +19,8 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+
+import com.hadoopbbs.database.Database;
 
 /**
  * 
@@ -39,7 +43,7 @@ public class SearchTable {
 
 		String table = "article";
 
-		String queries = "div";
+		String queries = "翡翠";
 
 		String[] colNames = { "title", "content" };
 
@@ -66,6 +70,39 @@ public class SearchTable {
 		}
 
 		System.out.println();
+
+		if (keyValues.length == 0) {
+
+			return;
+
+		}
+
+		// 获取前10个结果的内容
+		Database db = new Database();
+
+		int pageSize = 10;
+
+		pageSize = keyValues.length < pageSize ? keyValues.length : pageSize;
+
+		String[] pageKeyValues = new String[pageSize];
+
+		System.arraycopy(keyValues, 0, pageKeyValues, 0, pageSize);
+
+		ArrayList<HashMap> rows = db.select(table, keyName, pageKeyValues);
+
+		int rowSize = rows.size();
+
+		int i = 0;
+
+		for (HashMap row : rows) {
+
+			System.out.print(++i);
+
+			System.out.print(":\t");
+
+			System.out.println(row.get("TITLE"));
+
+		}
 
 	}
 
