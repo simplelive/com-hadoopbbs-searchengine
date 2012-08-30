@@ -39,7 +39,7 @@ public class SearchTable {
 
 		String table = "article";
 
-		String queries = "北京欢迎尔";
+		String queries = "div";
 
 		String[] colNames = { "title", "content" };
 
