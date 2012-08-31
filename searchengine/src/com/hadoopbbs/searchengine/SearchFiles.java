@@ -22,7 +22,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 /**
- * 搜索文件
+ * 搜索文本或HTML文件
  * 
  * @author 石瑜
  * 
