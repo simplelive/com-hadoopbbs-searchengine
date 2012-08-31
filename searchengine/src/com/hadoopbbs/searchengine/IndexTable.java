@@ -184,16 +184,12 @@ public class IndexTable {
 
 		doc.add(keyField);
 
-		org.jsoup.nodes.Document html = null;
-
 		for (int i = 0; i < colNames.length; i++) {
 
 			if (colNames[i] != null && colValues[i] != null) {
 
-				// 如果是html内容，使用下面两行转换为纯文本内容
-				html = Jsoup.parse(colValues[i]);
-
-				colValues[i] = html.text();
+				// 如果是html内容，转换为纯文本内容
+				colValues[i] = Jsoup.parse(colValues[i]).text();
 
 				// System.out.println(colValues[i]);
 
