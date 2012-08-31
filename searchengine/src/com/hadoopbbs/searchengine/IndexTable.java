@@ -33,7 +33,7 @@ import com.hadoopbbs.database.Database;
 
 public class IndexTable {
 
-	public final static int MAX_ROWS = 10000; // 进行索引时，查询数据库每次最多返回记录数
+	public static int MAX_ROWS = 10000; // 进行索引时，查询数据库每次最多返回记录数
 
 	public static void main(String[] args) throws IOException, SQLException {
 

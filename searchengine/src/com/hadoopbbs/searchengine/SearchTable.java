@@ -31,7 +31,7 @@ import com.hadoopbbs.database.Database;
  */
 public class SearchTable {
 
-	public final static int TOP_DOCS = 100; // 返回符合条件的最多记录数默认值
+	public static int TOP_DOCS = 1000; // 返回符合条件的最多记录数默认值
 
 	public static void main(String[] args) throws Exception {
 
@@ -143,7 +143,7 @@ public class SearchTable {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) throws IOException, ParseException {
+	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) {
 
 		if (indexBase == null || table == null || table.length() == 0 || queries == null || queries.length() == 0 || colNames == null || colNames.length == 0 || keyName == null || keyName.length() == 0) {
 
@@ -153,7 +153,23 @@ public class SearchTable {
 
 		File indexPath = new File(indexBase, table);
 
-		IndexReader reader = IndexReader.open(FSDirectory.open(indexPath));
+		IndexReader reader = null;
+
+		try {
+
+			reader = IndexReader.open(FSDirectory.open(indexPath));
+
+		} catch (IOException ex) {
+
+			ex.printStackTrace();
+
+		}
+
+		if (reader == null) {
+
+			return null;
+
+		}
 
 		IndexSearcher searcher = new IndexSearcher(reader);
 
@@ -178,13 +194,53 @@ public class SearchTable {
 
 		}
 
-		Query query = MultiFieldQueryParser.parse(Version.LUCENE_36, queries, colNames, clauses, analyzer);
+		Query query;
+
+		try {
+
+			query = MultiFieldQueryParser.parse(Version.LUCENE_36, queries, colNames, clauses, analyzer);
+
+		} catch (ParseException ex) {
+
+			ex.printStackTrace();
+
+			try {
+
+				searcher.close();
+
+			} catch (IOException ioex) {
+
+			}
+
+			return null;
+
+		}
 
 		// System.out.println("Searching for: " + query.toString());
 
 		top = top < 1 ? TOP_DOCS : top;
 
-		TopDocs topDocs = searcher.search(query, top);
+		TopDocs topDocs = null;
+
+		try {
+
+			topDocs = searcher.search(query, top);
+
+		} catch (IOException ex) {
+
+			ex.printStackTrace();
+
+			try {
+
+				searcher.close();
+
+			} catch (IOException ioex) {
+
+			}
+
+			return null;
+
+		}
 
 		ScoreDoc[] docs = topDocs.scoreDocs;
 
@@ -196,9 +252,25 @@ public class SearchTable {
 
 		for (int i = 0; i < docs.length; i++) {
 
-			doc = searcher.doc(docs[i].doc);
+			try {
 
-			keyValues[i] = doc.get(keyName);
+				doc = searcher.doc(docs[i].doc);
+
+				keyValues[i] = doc.get(keyName);
+
+			} catch (IOException ex) {
+
+				try {
+
+					searcher.close();
+
+				} catch (IOException ioex) {
+
+				}
+
+				return null;
+
+			}
 
 		}
 
