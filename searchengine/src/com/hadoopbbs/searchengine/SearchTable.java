@@ -90,11 +90,9 @@ public class SearchTable {
 
 		ArrayList<HashMap> rows = db.select(table, keyName, pageKeyValues);
 
-		int rowSize = rows.size();
-
 		int i = 0;
 
-		for (HashMap row : rows) {
+		for (HashMap<?, ?> row : rows) {
 
 			System.out.print(++i);
 
