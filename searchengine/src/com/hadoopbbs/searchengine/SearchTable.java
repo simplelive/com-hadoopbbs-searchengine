@@ -286,6 +286,14 @@ public class SearchTable {
 
 		}
 
+		try {
+
+			searcher.close();
+
+		} catch (IOException ioex) {
+
+		}
+
 		return keyValues;
 
 	}

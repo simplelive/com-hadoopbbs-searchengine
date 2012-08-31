@@ -1,15 +1,10 @@
 package com.hadoopbbs.searchengine;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Date;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.ParseException;
@@ -224,6 +219,14 @@ public class SearchFiles {
 				return null;
 
 			}
+
+		}
+
+		try {
+
+			searcher.close();
+
+		} catch (IOException ioex) {
 
 		}
 
