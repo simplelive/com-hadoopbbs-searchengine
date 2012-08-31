@@ -169,7 +169,7 @@ public class SearchFiles {
 
 		}
 
-		// System.out.println("Searching for: " + query.toString());
+		System.out.println("Searching for: " + query.toString());
 
 		top = top < 1 ? TOP_DOCS : top;
 

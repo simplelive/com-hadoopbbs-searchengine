@@ -151,6 +151,18 @@ public class SearchTable {
 
 		}
 
+		table = table.trim();
+
+		queries = queries.trim();
+
+		keyName = keyName.trim();
+
+		if (table.length() == 0 || queries.length() == 0 || keyName.length() == 0) {
+
+			return null;
+
+		}
+
 		File indexPath = new File(indexBase, table);
 
 		IndexReader reader = null;
