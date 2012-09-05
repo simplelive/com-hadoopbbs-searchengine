@@ -37,7 +37,7 @@ public class SearchTable {
 
 		System.out.println("search start ...");
 
-		SearchTable search = new SearchTable();
+		SearchTable searchTable = new SearchTable();
 
 		String indexBase = "d:/index/shop";
 
@@ -51,7 +51,13 @@ public class SearchTable {
 
 		long start = System.currentTimeMillis();
 
-		String[] keyValues = search.search(indexBase, table, queries, colNames, keyName, false);
+		String[] keyValues = searchTable.search(indexBase, table, queries, colNames, keyName, false);
+
+		for (int i = 0; i < 10; i++) {
+
+			keyValues = searchTable.search(indexBase, table, queries, colNames, keyName, false);
+
+		}
 
 		long end = System.currentTimeMillis();
 
@@ -204,7 +210,7 @@ public class SearchTable {
 
 		}
 
-		Query query;
+		Query query = null;
 
 		try {
 
