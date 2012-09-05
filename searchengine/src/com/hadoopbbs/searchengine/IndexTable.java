@@ -240,12 +240,12 @@ public class IndexTable {
 	 *          需要索引的列名数组
 	 * @param keyStart
 	 *          主键开始值
-	 * @param rowCount
+	 * @param maxRows
 	 *          索引记录总数
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void index(IndexWriter writer, String table, String[] colNames, String keyName, String keyStart, int rowCount) throws IOException, SQLException {
+	public void index(IndexWriter writer, String table, String[] colNames, String keyName, String keyStart, int maxRows) throws IOException, SQLException {
 
 		if (writer == null || table == null || table.length() == 0 || keyName == null || keyName.length() == 0 || colNames == null || colNames.length == 0) {
 
@@ -321,7 +321,7 @@ public class IndexTable {
 
 				count++;
 
-				if (count == MAX_ROWS || (rowCount > 0 && count == rowCount)) {
+				if (count == MAX_ROWS || count == maxRows) {
 
 					break;
 
@@ -329,15 +329,23 @@ public class IndexTable {
 
 			}
 
-			if (count == MAX_ROWS) {
+			if (count == MAX_ROWS && rs.next()) {
 
-				if (rs.next()) {
+				keyValue = String.valueOf(rs.getObject(keyName));
 
-					keyValue = String.valueOf(rs.getObject(keyName));
+				if (maxRows < 1) {
 
-					rowCount = rowCount > 0 ? rowCount - count : rowCount;
+					index(writer, table, colNames, keyName, keyValue, maxRows);
 
-					index(writer, table, colNames, keyName, keyValue, rowCount);
+				} else {
+
+					int leftRows = maxRows - count;
+
+					if (leftRows > 0) {
+
+						index(writer, table, colNames, keyName, keyValue, leftRows);
+
+					}
 
 				}
 
