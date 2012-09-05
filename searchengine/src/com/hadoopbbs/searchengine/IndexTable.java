@@ -39,7 +39,7 @@ public class IndexTable {
 
 		IndexTable index = new IndexTable();
 
-		String indexBase = "d:/index";
+		String indexBase = "d:/index/shop";
 
 		String table = "article";
 

@@ -39,11 +39,11 @@ public class SearchTable {
 
 		SearchTable search = new SearchTable();
 
-		String indexBase = "d:/index";
+		String indexBase = "d:/index/shop";
 
 		String table = "article";
 
-		String queries = "翡翠";
+		String queries = "意大利";
 
 		String[] colNames = { "title", "content" };
 
