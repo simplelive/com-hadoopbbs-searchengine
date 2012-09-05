@@ -62,32 +62,6 @@ public class SearchFiles {
 
 	}
 
-	public String[] search(String indexPath, String queries) {
-
-		return search(indexPath, queries, TOP_DOCS);
-
-	}
-
-	public String[] search(String indexPath, String queries, int top) {
-
-		if (indexPath == null) {
-
-			return null;
-
-		}
-
-		indexPath = indexPath.trim();
-
-		if (indexPath.length() == 0) {
-
-			return null;
-
-		}
-
-		return search(new File(indexPath), queries, TOP_DOCS);
-
-	}
-
 	public String[] search(File indexPath, String queries) {
 
 		return search(indexPath, queries, TOP_DOCS);
@@ -231,6 +205,32 @@ public class SearchFiles {
 		}
 
 		return keyValues;
+
+	}
+
+	public String[] search(String indexPath, String queries) {
+
+		return search(indexPath, queries, TOP_DOCS);
+
+	}
+
+	public String[] search(String indexPath, String queries, int top) {
+
+		if (indexPath == null) {
+
+			return null;
+
+		}
+
+		indexPath = indexPath.trim();
+
+		if (indexPath.length() == 0) {
+
+			return null;
+
+		}
+
+		return search(new File(indexPath), queries, TOP_DOCS);
 
 	}
 

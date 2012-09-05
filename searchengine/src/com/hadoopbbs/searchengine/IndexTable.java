@@ -33,9 +33,9 @@ import com.hadoopbbs.database.Database;
 
 public class IndexTable {
 
-	public static int MAX_ROWS = 10000; // 进行索引时，查询数据库每次最多返回记录数
+	public static int MAX_ROWS = 1000; // 进行索引时，查询数据库每次最多返回记录数
 
-	public static void main(String[] args) throws IOException, SQLException {
+	public static void main(String[] args) {
 
 		IndexTable index = new IndexTable();
 
@@ -67,19 +67,19 @@ public class IndexTable {
 
 	}
 
-	public void index(File indexBase, String table, String[] colNames, String keyName) throws IOException, SQLException {
+	public void index(File indexBase, String table, String[] colNames, String keyName) {
 
 		index(indexBase, table, colNames, keyName, true);
 
 	}
 
-	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create) throws IOException, SQLException {
+	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create) {
 
 		index(indexBase, table, colNames, keyName, create, null);
 
 	}
 
-	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart) throws IOException, SQLException {
+	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart) {
 
 		index(indexBase, table, colNames, keyName, create, keyStart, 0);
 
@@ -105,7 +105,7 @@ public class IndexTable {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart, int rowCount) throws IOException, SQLException {
+	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart, int rowCount) {
 
 		if (indexBase == null || table == null || table.length() == 0 || keyName == null || keyName.length() == 0 || colNames == null || colNames.length == 0) {
 
@@ -115,7 +115,19 @@ public class IndexTable {
 
 		File indexPath = new File(indexBase, table);
 
-		Directory dir = FSDirectory.open(indexPath);
+		Directory dir = null;
+
+		try {
+
+			dir = FSDirectory.open(indexPath);
+
+		} catch (IOException ex) {
+
+			ex.printStackTrace();
+
+			return;
+
+		}
 
 		// Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		// Analyzer analyzer = new IKAnalyzer();
@@ -142,13 +154,49 @@ public class IndexTable {
 		// size to the JVM (eg add -Xmx512m or -Xmx1g):
 		//
 
-		iwc.setRAMBufferSizeMB(256);
+		// iwc.setRAMBufferSizeMB(256);
 
-		IndexWriter writer = new IndexWriter(dir, iwc);
+		IndexWriter writer = null;
 
-		index(writer, table, colNames, keyName, keyStart, rowCount);
+		try {
 
-		writer.close();
+			writer = new IndexWriter(dir, iwc);
+
+			index(writer, table, colNames, keyName, keyStart, rowCount);
+
+		} catch (Exception ex) {
+
+			ex.printStackTrace();
+
+			if (writer != null && create) {
+
+				try {
+
+					writer.rollback();
+
+				} catch (IOException ioex) {
+
+				}
+
+				return;
+
+			}
+
+		}
+
+		if (writer == null) {
+
+			return;
+
+		}
+
+		try {
+
+			writer.close();
+
+		} catch (IOException ex) {
+
+		}
 
 	}
 
@@ -363,25 +411,25 @@ public class IndexTable {
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames, String keyName) throws IOException, SQLException {
+	public void index(String indexBase, String table, String[] colNames, String keyName) {
 
 		index(indexBase, table, colNames, keyName, true);
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create) throws IOException, SQLException {
+	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create) {
 
 		index(indexBase, table, colNames, keyName, create, null);
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart) throws IOException, SQLException {
+	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart) {
 
 		index(indexBase, table, colNames, keyName, create, keyStart, 0);
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart, int rowCount) throws IOException, SQLException {
+	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart, int rowCount) {
 
 		index(new File(indexBase), table, colNames, keyName, create, keyStart, rowCount);
 
