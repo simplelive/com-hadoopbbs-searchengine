@@ -339,6 +339,12 @@ public class IndexTable {
 
 		ResultSet rs = null;
 
+		boolean next = false;
+
+		String keyValue = null;
+
+		int remain = 0;
+
 		try {
 
 			conn = db.getConnection();
@@ -348,8 +354,6 @@ public class IndexTable {
 			ps.setMaxRows(MAX_ROWS + 1);
 
 			rs = ps.executeQuery();
-
-			String keyValue = null;
 
 			String[] colValues = new String[colNames.length];
 
@@ -383,15 +387,17 @@ public class IndexTable {
 
 				if (maxRows < 1) {
 
-					index(writer, table, colNames, keyName, keyValue, maxRows);
+					next = true;
+
+					remain = maxRows;
 
 				} else {
 
-					int leftRows = maxRows - count;
+					remain = maxRows - count;
 
-					if (leftRows > 0) {
+					if (remain > 0) {
 
-						index(writer, table, colNames, keyName, keyValue, leftRows);
+						next = true;
 
 					}
 
@@ -406,6 +412,12 @@ public class IndexTable {
 		} finally {
 
 			db.close(rs, ps, conn);
+
+		}
+
+		if (next) {
+
+			index(writer, table, colNames, keyName, keyValue, remain);
 
 		}
 
