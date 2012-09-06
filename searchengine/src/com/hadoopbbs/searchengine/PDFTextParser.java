@@ -11,7 +11,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 
 /**
- * PDF分析工具，转换PDF文件为纯文本文件
+ * PDF工具，转换PDF为纯文本
  * 
  * @author 石瑜
  * 
@@ -24,22 +24,22 @@ public class PDFTextParser {
 	}
 
 	public static void main(String[] args) {
-		
+
 		System.out.println("start ...");
 
 		PDFTextParser p = new PDFTextParser();
 
-		String file = "D:/Docs/Lucene/Lucene-in-Action.pdf";
-		
-		long start=System.currentTimeMillis();
+		String file = "D:/Docs/Lucene/Google_三大论文中文版.pdf";
+
+		long start = System.currentTimeMillis();
 
 		String text = p.toText(file);
-		
+
 		long end = System.currentTimeMillis();
-		
-		System.out.println("time:\t"+(end -start));
-		
+
 		System.out.println(text);
+
+		System.out.println("time:\t" + (end - start));
 
 	}
 
