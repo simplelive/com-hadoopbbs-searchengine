@@ -17,7 +17,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-import org.apache.pdfbox.lucene.LucenePDFDocument;
 import org.jsoup.Jsoup;
 
 /**
@@ -256,8 +255,6 @@ public class IndexFiles {
 
 		// 如果是html内容，转换为纯文本内容
 		value = Jsoup.parse(value).text();
-
-		LucenePDFDocument.getDocument(file);
 
 		// make a new, empty document
 		Document doc = new Document();
