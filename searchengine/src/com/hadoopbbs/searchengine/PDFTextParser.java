@@ -29,9 +29,15 @@ public class PDFTextParser {
 
 		PDFTextParser p = new PDFTextParser();
 
-		String file = "";
+		String file = "D:/Docs/Lucene/Lucene-in-Action.pdf";
+		
+		long start=System.currentTimeMillis();
 
 		String text = p.toText(file);
+		
+		long end = System.currentTimeMillis();
+		
+		System.out.println("time:\t"+(end -start));
 		
 		System.out.println(text);
 
