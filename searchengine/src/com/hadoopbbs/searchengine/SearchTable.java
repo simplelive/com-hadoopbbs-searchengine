@@ -2,6 +2,7 @@ package com.hadoopbbs.searchengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,12 +38,18 @@ public class SearchTable {
 	// IndexReader HashMap
 	public static HashMap<String, IndexReader> READER_MAP = new HashMap<String, IndexReader>();
 
-	// 测试
 	public static void main(String[] args) throws Exception {
 
-		System.out.println("search start ...");
-
 		SearchTable searchTable = new SearchTable();
+
+		searchTable.test();
+
+	}
+
+	// 测试
+	public void test() throws CorruptIndexException, IOException, ParseException, SQLException {
+
+		System.out.println("search start ...");
 
 		String indexBase = "d:/index/shop";
 
@@ -56,7 +63,9 @@ public class SearchTable {
 
 		long start = System.currentTimeMillis();
 
-		String[] keyValues = searchTable.search(indexBase, table, queries, colNames, keyName, false);
+		System.out.println("queries:\t" + queries);
+
+		String[] keyValues = search(indexBase, table, queries, colNames, keyName, false);
 
 		for (int i = 0; i < 10; i++) {
 
@@ -64,7 +73,7 @@ public class SearchTable {
 
 			System.out.println("queries:\t" + queries);
 
-			keyValues = searchTable.search(indexBase, table, queries, colNames, keyName, false);
+			keyValues = search(indexBase, table, queries, colNames, keyName, false);
 
 		}
 
