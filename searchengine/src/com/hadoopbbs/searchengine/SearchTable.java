@@ -35,94 +35,18 @@ public class SearchTable {
 	// 返回符合条件的最多记录数默认值
 	public static int TOP_DOCS = 100;
 
-	// IndexReader HashMap
-	public static HashMap<String, IndexReader> READER_MAP = new HashMap<String, IndexReader>();
+	// IndexSearcher HashMap
+	public static HashMap<String, IndexSearcher> SEARCHER = new HashMap<String, IndexSearcher>();
 
 	public static void main(String[] args) throws Exception {
 
-		SearchTable searchTable = new SearchTable();
-
-		searchTable.test();
-
-	}
-
-	// 测试
-	public void test() throws CorruptIndexException, IOException, ParseException, SQLException {
-
-		System.out.println("search start ...");
-
-		String indexBase = "d:/index/shop";
-
-		String table = "article";
-
-		String queries = "钻石";
-
-		String[] colNames = { "title", "content" };
-
-		String keyName = "id";
-
-		long start = System.currentTimeMillis();
-
-		System.out.println("queries:\t" + queries);
-
-		String[] keyValues = search(indexBase, table, queries, colNames, keyName, false);
-
 		for (int i = 0; i < 10; i++) {
 
-			queries = i + "" + i + "" + i + "" + i + "" + i + "钻石" + i + "" + i + "" + i + "" + i + "" + i + "";
+			SearchTable searchTable = new SearchTable();
 
-			System.out.println("queries:\t" + queries);
+			searchTable.test();
 
-			keyValues = search(indexBase, table, queries, colNames, keyName, false);
-
-		}
-
-		long end = System.currentTimeMillis();
-
-		System.out.println("time:\t" + (end - start));
-
-		System.out.println("count:\t" + keyValues.length);
-
-		System.out.print(keyName + ":\t");
-
-		for (int i = 0; i < keyValues.length; i++) {
-
-			System.out.print(keyValues[i]);
-
-			System.out.print(",");
-
-		}
-
-		System.out.println();
-
-		if (keyValues.length == 0) {
-
-			return;
-
-		}
-
-		// 获取前10个结果的内容
-		Database db = new Database();
-
-		int pageSize = 10;
-
-		pageSize = keyValues.length < pageSize ? keyValues.length : pageSize;
-
-		String[] pageKeyValues = new String[pageSize];
-
-		System.arraycopy(keyValues, 0, pageKeyValues, 0, pageSize);
-
-		ArrayList<HashMap> rows = db.select(table, keyName, pageKeyValues);
-
-		int i = 0;
-
-		for (HashMap<?, ?> row : rows) {
-
-			System.out.print(++i);
-
-			System.out.print(":\t");
-
-			System.out.println(row.get("TITLE"));
+			System.out.println();
 
 		}
 
@@ -132,7 +56,7 @@ public class SearchTable {
 
 	}
 
-	public IndexReader getReader(File indexPath) {
+	public IndexSearcher getSearcher(File indexPath) {
 
 		if (indexPath == null) {
 
@@ -142,12 +66,14 @@ public class SearchTable {
 
 		String path = indexPath.getAbsolutePath();
 
-		IndexReader reader = READER_MAP.get(path);
+		IndexSearcher searcher = SEARCHER.get(path);
 
-		// 索引目录对应的IndexReader已经存在
-		if (reader != null) {
+		// 索引目录对应的IndexSearcher已经存在
+		if (searcher != null) {
 
 			try {
+
+				IndexReader reader = searcher.getIndexReader();
 
 				if (!reader.isCurrent()) { // IndexReader已经改变
 
@@ -155,13 +81,17 @@ public class SearchTable {
 
 					if (_reader != null) {
 
-						reader = _reader;
+						reader.close();
+
+						searcher.close();
+
+						searcher = new IndexSearcher(_reader);
 
 					}
 
 				}
 
-				return reader;
+				return searcher;
 
 			} catch (IOException ex) {
 
@@ -174,9 +104,11 @@ public class SearchTable {
 		// 新建 IndexReader
 		try {
 
-			reader = IndexReader.open(FSDirectory.open(indexPath));
+			IndexReader reader = IndexReader.open(FSDirectory.open(indexPath));
 
-			READER_MAP.put(path, reader);
+			searcher = new IndexSearcher(reader);
+
+			SEARCHER.put(path, searcher);
 
 		} catch (IOException ex) {
 
@@ -186,7 +118,7 @@ public class SearchTable {
 
 		}
 
-		return reader;
+		return searcher;
 
 	}
 
@@ -245,27 +177,13 @@ public class SearchTable {
 
 		File indexPath = new File(indexBase, table);
 
-		// long start = System.currentTimeMillis();
+		IndexSearcher searcher = getSearcher(indexPath);
 
-		IndexReader reader = getReader(indexPath);
-
-		// long end = System.currentTimeMillis();
-
-		// System.out.println("IndexReader Time:\t" + (end - start));
-
-		if (reader == null) {
+		if (searcher == null) {
 
 			return null;
 
 		}
-
-		// start = System.currentTimeMillis();
-
-		IndexSearcher searcher = new IndexSearcher(reader);
-
-		// end = System.currentTimeMillis();
-
-		// System.out.println("IndexSearcher Time:\t" + (end - start));
 
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
@@ -363,6 +281,88 @@ public class SearchTable {
 	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) throws CorruptIndexException, IOException, ParseException {
 
 		return search(new File(indexBase), table, queries, colNames, keyName, and, top);
+
+	}
+
+	// 测试
+	public void test() throws CorruptIndexException, IOException, ParseException, SQLException {
+
+		System.out.println("search start ...");
+
+		String indexBase = "d:/index/shop";
+
+		String table = "article";
+
+		String queries = "钻石";
+
+		String[] colNames = { "title", "content" };
+
+		String keyName = "id";
+
+		long start = System.currentTimeMillis();
+
+		System.out.println("queries:\t" + queries);
+
+		String[] keyValues = search(indexBase, table, queries, colNames, keyName, false);
+
+		for (int i = 0; i < 3; i++) {
+
+			queries = i + "" + i + "" + i + "" + i + "" + i + "钻石" + i + "" + i + "" + i + "" + i + "" + i + "";
+
+			System.out.println("queries:\t" + queries);
+
+			keyValues = search(indexBase, table, queries, colNames, keyName, false);
+
+		}
+
+		long end = System.currentTimeMillis();
+
+		System.out.println("time:\t" + (end - start));
+
+		System.out.println("count:\t" + keyValues.length);
+
+		System.out.print(keyName + ":\t");
+
+		for (int i = 0; i < keyValues.length; i++) {
+
+			System.out.print(keyValues[i]);
+
+			System.out.print(",");
+
+		}
+
+		System.out.println();
+
+		if (keyValues.length == 0) {
+
+			return;
+
+		}
+
+		// 获取前10个结果的内容
+		Database db = new Database();
+
+		int pageSize = 10;
+
+		pageSize = keyValues.length < pageSize ? keyValues.length : pageSize;
+
+		String[] pageKeyValues = new String[pageSize];
+
+		System.arraycopy(keyValues, 0, pageKeyValues, 0, pageSize);
+
+		ArrayList<HashMap> rows = db.select(table, keyName, pageKeyValues);
+
+		int i = 0;
+
+		for (HashMap<?, ?> row : rows) {
+
+			System.out.print(++i);
+
+			System.out.print(":\t");
+
+			System.out.println(row.get("TITLE"));
+
+		}
 
 	}
 
