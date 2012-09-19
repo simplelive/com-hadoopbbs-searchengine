@@ -32,7 +32,7 @@ import com.hadoopbbs.database.Database;
  */
 public class SearchTable {
 
-	// 返回符合条件的最多记录数默认值
+	// 搜索结果最多返回记录数默认值
 	public static int TOP_DOCS = 100;
 
 	// IndexSearcher HashMap
