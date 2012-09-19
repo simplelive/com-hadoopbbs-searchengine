@@ -2,7 +2,6 @@ package com.hadoopbbs.searchengine;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.pdfbox.cos.COSDocument;
@@ -18,10 +17,6 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 
 public class PDFTextParser {
-
-	public PDFTextParser() {
-
-	}
 
 	public static void main(String[] args) {
 
@@ -40,6 +35,10 @@ public class PDFTextParser {
 		System.out.println(text);
 
 		System.out.println("time:\t" + (end - start));
+
+	}
+
+	public PDFTextParser() {
 
 	}
 
