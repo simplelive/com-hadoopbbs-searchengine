@@ -307,7 +307,7 @@ public class SearchTable {
 
 		for (int i = 0; i < 3; i++) {
 
-			queries = i + "" + i + "" + i + "" + i + "" + i + "钻石" + i + "" + i + "" + i + "" + i + "" + i + "";
+			queries = i + "钻石" + i;
 
 			System.out.println("queries:\t" + queries);
 
