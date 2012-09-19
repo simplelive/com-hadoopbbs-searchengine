@@ -2,6 +2,7 @@ package com.hadoopbbs.searchengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
@@ -25,6 +26,9 @@ import org.apache.lucene.util.Version;
 public class SearchFiles {
 
 	public static int TOP_DOCS = 1000; // 返回符合条件的最多文件数默认值
+
+	// IndexSearcher HashMap
+	public static HashMap<String, IndexSearcher> SEARCHER = new HashMap<String, IndexSearcher>();
 
 	public static void main(String[] args) {
 
@@ -62,6 +66,72 @@ public class SearchFiles {
 
 	}
 
+	public IndexSearcher getSearcher(File indexPath) {
+
+		if (indexPath == null) {
+
+			return null;
+
+		}
+
+		String path = indexPath.getAbsolutePath();
+
+		IndexSearcher searcher = SEARCHER.get(path);
+
+		// 索引目录对应的IndexSearcher已经存在
+		if (searcher != null) {
+
+			try {
+
+				IndexReader reader = searcher.getIndexReader();
+
+				if (!reader.isCurrent()) { // IndexReader已经改变
+
+					IndexReader _reader = IndexReader.openIfChanged(reader); // 重新打开IndexReader
+
+					if (_reader != null) {
+
+						reader.close();
+
+						searcher.close();
+
+						searcher = new IndexSearcher(_reader);
+
+					}
+
+				}
+
+				return searcher;
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+
+			}
+
+		}
+
+		// 新建 IndexReader
+		try {
+
+			IndexReader reader = IndexReader.open(FSDirectory.open(indexPath));
+
+			searcher = new IndexSearcher(reader);
+
+			SEARCHER.put(path, searcher);
+
+		} catch (IOException ex) {
+
+			ex.printStackTrace();
+
+			return null;
+
+		}
+
+		return searcher;
+
+	}
+
 	public String[] search(File indexPath, String queries) {
 
 		return search(indexPath, queries, TOP_DOCS);
@@ -95,21 +165,13 @@ public class SearchFiles {
 
 		}
 
-		IndexReader reader = null;
+		IndexSearcher searcher = getSearcher(indexPath);
 
-		try {
-
-			reader = IndexReader.open(FSDirectory.open(indexPath));
-
-		} catch (IOException ex) {
-
-			ex.printStackTrace();
+		if (searcher == null) {
 
 			return null;
 
 		}
-
-		IndexSearcher searcher = new IndexSearcher(reader);
 
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
