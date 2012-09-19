@@ -31,8 +31,13 @@ import com.hadoopbbs.database.Database;
  */
 public class SearchTable {
 
-	public static int TOP_DOCS = 100; // 返回符合条件的最多记录数默认值
+	// 返回符合条件的最多记录数默认值
+	public static int TOP_DOCS = 100;
 
+	// IndexReader HashMap
+	public static HashMap<String, IndexReader> READER_MAP = new HashMap<String, IndexReader>();
+
+	// 测试
 	public static void main(String[] args) throws Exception {
 
 		System.out.println("search start ...");
@@ -43,7 +48,7 @@ public class SearchTable {
 
 		String table = "article";
 
-		String queries = "意大利";
+		String queries = "钻石";
 
 		String[] colNames = { "title", "content" };
 
@@ -54,6 +59,10 @@ public class SearchTable {
 		String[] keyValues = searchTable.search(indexBase, table, queries, colNames, keyName, false);
 
 		for (int i = 0; i < 10; i++) {
+
+			queries = i + "" + i + "" + i + "" + i + "" + i + "钻石" + i + "" + i + "" + i + "" + i + "" + i + "";
+
+			System.out.println("queries:\t" + queries);
 
 			keyValues = searchTable.search(indexBase, table, queries, colNames, keyName, false);
 
@@ -114,6 +123,64 @@ public class SearchTable {
 
 	}
 
+	public IndexReader getReader(File indexPath) {
+
+		if (indexPath == null) {
+
+			return null;
+
+		}
+
+		String path = indexPath.getAbsolutePath();
+
+		IndexReader reader = READER_MAP.get(path);
+
+		// 索引目录对应的IndexReader已经存在
+		if (reader != null) {
+
+			try {
+
+				if (!reader.isCurrent()) { // IndexReader已经改变
+
+					IndexReader _reader = IndexReader.openIfChanged(reader); // 重新打开IndexReader
+
+					if (_reader != null) {
+
+						reader = _reader;
+
+					}
+
+				}
+
+				return reader;
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+
+			}
+
+		}
+
+		// 新建 IndexReader
+		try {
+
+			reader = IndexReader.open(FSDirectory.open(indexPath));
+
+			READER_MAP.put(path, reader);
+
+		} catch (IOException ex) {
+
+			ex.printStackTrace();
+
+			return null;
+
+		}
+
+		return reader;
+
+	}
+
 	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName) throws IOException, ParseException {
 
 		return search(indexBase, table, queries, colNames, keyName, false);
@@ -169,17 +236,13 @@ public class SearchTable {
 
 		File indexPath = new File(indexBase, table);
 
-		IndexReader reader = null;
+		// long start = System.currentTimeMillis();
 
-		try {
+		IndexReader reader = getReader(indexPath);
 
-			reader = IndexReader.open(FSDirectory.open(indexPath));
+		// long end = System.currentTimeMillis();
 
-		} catch (IOException ex) {
-
-			ex.printStackTrace();
-
-		}
+		// System.out.println("IndexReader Time:\t" + (end - start));
 
 		if (reader == null) {
 
@@ -187,7 +250,13 @@ public class SearchTable {
 
 		}
 
+		// start = System.currentTimeMillis();
+
 		IndexSearcher searcher = new IndexSearcher(reader);
+
+		// end = System.currentTimeMillis();
+
+		// System.out.println("IndexSearcher Time:\t" + (end - start));
 
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
@@ -220,14 +289,6 @@ public class SearchTable {
 
 			ex.printStackTrace();
 
-			try {
-
-				searcher.close();
-
-			} catch (IOException ioex) {
-
-			}
-
 			return null;
 
 		}
@@ -245,14 +306,6 @@ public class SearchTable {
 		} catch (IOException ex) {
 
 			ex.printStackTrace();
-
-			try {
-
-				searcher.close();
-
-			} catch (IOException ioex) {
-
-			}
 
 			return null;
 
@@ -276,25 +329,9 @@ public class SearchTable {
 
 			} catch (IOException ex) {
 
-				try {
-
-					searcher.close();
-
-				} catch (IOException ioex) {
-
-				}
-
 				return null;
 
 			}
-
-		}
-
-		try {
-
-			searcher.close();
-
-		} catch (IOException ioex) {
 
 		}
 
