@@ -129,19 +129,19 @@ public class SearchTable {
 	 * 搜索表，按指定的上级索引目录，表名，搜索关键字，列名数组，主键名，是否全部列都包含关键字(AND操作)，最多返回结果数
 	 * 
 	 * @param indexBase
-	 *            上级索引目录
+	 *          上级索引目录
 	 * @param table
-	 *            表名
+	 *          表名
 	 * @param queries
-	 *            搜索关键字
+	 *          搜索关键字
 	 * @param colNames
-	 *            列名数组
+	 *          列名数组
 	 * @param keyName
-	 *            主键名
+	 *          主键名
 	 * @param and
-	 *            是否全部列都包含关键字(AND操作)
+	 *          是否全部列都包含关键字(AND操作)
 	 * @param top
-	 *            最多返回结果数
+	 *          最多返回结果数
 	 * @return 键值数组，或null
 	 * @throws IOException
 	 * @throws ParseException
