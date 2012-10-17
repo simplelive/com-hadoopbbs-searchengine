@@ -34,7 +34,7 @@ import com.hadoopbbs.database.Database;
 public class SearchTable {
 
 	// 搜索结果最多返回记录数默认值
-	public static int TOP_DOCS = 100;
+	public int topDocs = 20;
 
 	// IndexSearcher HashMap
 	public static HashMap<String, IndexSearcher> SEARCHER = new HashMap<String, IndexSearcher>();
@@ -113,6 +113,12 @@ public class SearchTable {
 
 	}
 
+	public int getTopDocs() {
+
+		return topDocs;
+
+	}
+
 	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName) throws IOException, ParseException {
 
 		return search(indexBase, table, queries, colNames, keyName, false);
@@ -121,7 +127,7 @@ public class SearchTable {
 
 	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName, boolean and) throws IOException, ParseException {
 
-		return search(indexBase, table, queries, colNames, keyName, and, TOP_DOCS);
+		return search(indexBase, table, queries, colNames, keyName, and, topDocs);
 
 	}
 
@@ -213,7 +219,7 @@ public class SearchTable {
 
 		// System.out.println("Searching for: " + query.toString());
 
-		top = top < 1 ? TOP_DOCS : top;
+		top = top < 1 ? topDocs : top;
 
 		TopDocs topDocs = null;
 
@@ -265,13 +271,19 @@ public class SearchTable {
 
 	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName, boolean and) throws CorruptIndexException, IOException, ParseException {
 
-		return search(indexBase, table, queries, colNames, keyName, and, TOP_DOCS);
+		return search(indexBase, table, queries, colNames, keyName, and, topDocs);
 
 	}
 
 	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) throws CorruptIndexException, IOException, ParseException {
 
 		return search(new File(indexBase), table, queries, colNames, keyName, and, top);
+
+	}
+
+	public void setTopDocs(int topDocs) {
+
+		this.topDocs = topDocs;
 
 	}
 

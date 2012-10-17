@@ -25,7 +25,7 @@ import org.apache.lucene.util.Version;
  */
 public class SearchFiles {
 
-	public static int TOP_DOCS = 1000; // 返回符合条件的最多文件数默认值
+	public int topDocs = 20; // 返回符合条件的最多文件数默认值
 
 	// IndexSearcher HashMap
 	public static HashMap<String, IndexSearcher> SEARCHER = new HashMap<String, IndexSearcher>();
@@ -132,9 +132,15 @@ public class SearchFiles {
 
 	}
 
+	public int getTopDocs() {
+
+		return topDocs;
+
+	}
+
 	public String[] search(File indexPath, String queries) {
 
-		return search(indexPath, queries, TOP_DOCS);
+		return search(indexPath, queries, topDocs);
 
 	}
 
@@ -202,7 +208,7 @@ public class SearchFiles {
 
 		System.out.println("Searching for: " + query.toString());
 
-		top = top < 1 ? TOP_DOCS : top;
+		top = top < 1 ? topDocs : top;
 
 		TopDocs topDocs = null;
 
@@ -272,7 +278,7 @@ public class SearchFiles {
 
 	public String[] search(String indexPath, String queries) {
 
-		return search(indexPath, queries, TOP_DOCS);
+		return search(indexPath, queries, topDocs);
 
 	}
 
@@ -292,7 +298,13 @@ public class SearchFiles {
 
 		}
 
-		return search(new File(indexPath), queries, TOP_DOCS);
+		return search(new File(indexPath), queries, topDocs);
+
+	}
+
+	public void setTopDocs(int topDocs) {
+
+		this.topDocs = topDocs;
 
 	}
 
