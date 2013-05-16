@@ -154,7 +154,7 @@ public class IndexTable {
 		// size to the JVM (eg add -Xmx512m or -Xmx1g):
 		//
 
-		// iwc.setRAMBufferSizeMB(256);
+		iwc.setRAMBufferSizeMB(256);
 
 		IndexWriter writer = null;
 

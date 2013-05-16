@@ -27,7 +27,7 @@ public class SearchFiles {
 
 	public int topDocs = 20; // 返回符合条件的最多文件数默认值
 
-	// IndexSearcher HashMap
+	// 因为IndexSearcher不需要同步，所以可以使用HashMap，不必使用Hashtable
 	public static HashMap<String, IndexSearcher> SEARCHER = new HashMap<String, IndexSearcher>();
 
 	public static void main(String[] args) {
@@ -163,7 +163,7 @@ public class SearchFiles {
 
 		}
 
-		queries = queries.trim();
+		queries = queries.replaceAll("\\p{Punct}|\\p{Space}", " ").trim();
 
 		if (queries.length() == 0) {
 
@@ -194,19 +194,11 @@ public class SearchFiles {
 
 			ex.printStackTrace();
 
-			try {
-
-				searcher.close();
-
-			} catch (IOException ioex) {
-
-			}
-
 			return null;
 
 		}
 
-		System.out.println("Searching for: " + query.toString());
+		// System.out.println("Searching for: " + query.toString());
 
 		top = top < 1 ? topDocs : top;
 
@@ -220,14 +212,6 @@ public class SearchFiles {
 
 			ex.printStackTrace();
 
-			try {
-
-				searcher.close();
-
-			} catch (IOException ioex) {
-
-			}
-
 			return null;
 
 		}
@@ -238,37 +222,27 @@ public class SearchFiles {
 
 		String[] keyValues = new String[docs.length];
 
-		for (int i = 0; i < docs.length; i++) {
+		try {
 
-			try {
+			for (int i = 0; i < docs.length; i++) {
 
 				doc = searcher.doc(docs[i].doc);
 
 				keyValues[i] = doc.get("key");
 
-			} catch (IOException ex) {
-
-				ex.printStackTrace();
-
-				try {
-
-					searcher.close();
-
-				} catch (IOException ioex) {
-
-				}
-
-				return null;
-
 			}
 
-		}
+		} catch (IOException ex) {
 
-		try {
+			ex.printStackTrace();
 
-			searcher.close();
+			return null;
 
-		} catch (IOException ioex) {
+		} finally {
+
+			doc = null;
+
+			docs = null;
 
 		}
 

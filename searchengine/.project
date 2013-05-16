@@ -14,16 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>database_ini</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/database/ini</locationURI>
-		</link>
-		<link>
-			<name>database_src</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/database/src</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

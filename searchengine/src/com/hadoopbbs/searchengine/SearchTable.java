@@ -36,7 +36,7 @@ public class SearchTable {
 	// 搜索结果最多返回记录数默认值
 	public int topDocs = 20;
 
-	// IndexSearcher HashMap
+	// 因为IndexSearcher不需要同步，所以可以使用HashMap，不必使用Hashtable
 	public static HashMap<String, IndexSearcher> SEARCHER = new HashMap<String, IndexSearcher>();
 
 	public static void main(String[] args) throws Exception {
@@ -162,7 +162,7 @@ public class SearchTable {
 
 		table = table.trim();
 
-		queries = queries.trim();
+		queries = queries.replaceAll("\\p{Punct}|\\p{Space}", " ").trim();
 
 		keyName = keyName.trim();
 
@@ -212,8 +212,14 @@ public class SearchTable {
 		} catch (ParseException ex) {
 
 			ex.printStackTrace();
+			
+			query = null;
 
 			return null;
+
+		} finally {
+
+			clauses = null;
 
 		}
 
@@ -231,6 +237,8 @@ public class SearchTable {
 
 			ex.printStackTrace();
 
+			topDocs = null;
+
 			return null;
 
 		}
@@ -243,19 +251,27 @@ public class SearchTable {
 
 		keyName = keyName.toLowerCase();
 
-		for (int i = 0; i < docs.length; i++) {
+		try {
 
-			try {
+			for (int i = 0; i < docs.length; i++) {
 
 				doc = searcher.doc(docs[i].doc);
 
 				keyValues[i] = doc.get(keyName);
 
-			} catch (IOException ex) {
-
-				return null;
-
 			}
+
+		} catch (IOException ex) {
+
+			ex.printStackTrace();
+
+			return null;
+
+		} finally {
+
+			doc = null;
+
+			docs = null;
 
 		}
 
