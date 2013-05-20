@@ -87,17 +87,11 @@ public class SearchFiles {
 
 				if (!reader.isCurrent()) { // IndexReader已经改变
 
-					IndexReader _reader = IndexReader.openIfChanged(reader); // 重新打开IndexReader
+					reader = IndexReader.openIfChanged(reader);
 
-					if (_reader != null) {
+					searcher = new IndexSearcher(reader);
 
-						reader.close();
-
-						searcher.close();
-
-						searcher = new IndexSearcher(_reader);
-
-					}
+					SEARCHER.put(path, searcher);
 
 				}
 

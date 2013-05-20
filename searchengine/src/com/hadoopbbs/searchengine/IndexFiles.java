@@ -88,10 +88,6 @@ public class IndexFiles {
 
 			ex.printStackTrace();
 
-		}
-
-		if (dir == null) {
-
 			return;
 
 		}
@@ -134,41 +130,45 @@ public class IndexFiles {
 
 			ex.printStackTrace();
 
-			if (writer != null && create) {
+		} finally {
+
+			if (writer != null) {
+
+				// NOTE: if you want to maximize search performance,
+				// you can optionally call forceMerge here. This can be
+				// a terribly costly operation, so generally it's only
+				// worth it when your index is relatively static (ie
+				// you're done adding documents to it):
 
 				try {
 
-					writer.rollback();
+					writer.forceMerge(1);
 
-				} catch (IOException ioex) {
+				} catch (IOException ex) {
 
 				}
 
-				return;
+				try {
+
+					writer.close();
+
+				} catch (IOException ex) {
+
+				}
 
 			}
 
-		}
+			if (dir != null) {
 
-		if (writer == null) {
+				try {
 
-			return;
+					dir.close();
 
-		}
+				} catch (IOException ex) {
 
-		// NOTE: if you want to maximize search performance,
-		// you can optionally call forceMerge here. This can be
-		// a terribly costly operation, so generally it's only
-		// worth it when your index is relatively static (ie
-		// you're done adding documents to it):
-		//
-		// writer.forceMerge(1);
+				}
 
-		try {
-
-			writer.close();
-
-		} catch (IOException ex) {
+			}
 
 		}
 
@@ -211,6 +211,8 @@ public class IndexFiles {
 
 			}
 
+			files = null;
+
 			return;
 
 		}
@@ -236,6 +238,8 @@ public class IndexFiles {
 			ex.printStackTrace();
 
 		} finally {
+
+			bytes = null;
 
 			try {
 
@@ -308,6 +312,8 @@ public class IndexFiles {
 			writer.updateDocument(new Term("key", file.getPath()), doc);
 
 		}
+
+		doc = null;
 
 	}
 

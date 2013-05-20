@@ -168,33 +168,45 @@ public class IndexTable {
 
 			ex.printStackTrace();
 
-			if (writer != null && create) {
+		} finally {
+
+			if (writer != null) {
+
+				// NOTE: if you want to maximize search performance,
+				// you can optionally call forceMerge here. This can be
+				// a terribly costly operation, so generally it's only
+				// worth it when your index is relatively static (ie
+				// you're done adding documents to it):
 
 				try {
 
-					writer.rollback();
+					writer.forceMerge(1);
 
-				} catch (IOException ioex) {
+				} catch (IOException ex) {
 
 				}
 
-				return;
+				try {
+
+					writer.close();
+
+				} catch (IOException ex) {
+
+				}
 
 			}
 
-		}
+			if (dir != null) {
 
-		if (writer == null) {
+				try {
 
-			return;
+					dir.close();
 
-		}
+				} catch (IOException ex) {
 
-		try {
+				}
 
-			writer.close();
-
-		} catch (IOException ex) {
+			}
 
 		}
 
@@ -260,6 +272,8 @@ public class IndexTable {
 			writer.updateDocument(new Term(keyName, keyValue), doc);
 
 		}
+
+		doc = null;
 
 	}
 
@@ -410,6 +424,8 @@ public class IndexTable {
 			throw ex;
 
 		} finally {
+
+			sql = null;
 
 			db.close(rs, ps, conn);
 

@@ -78,7 +78,11 @@ public class SearchTable {
 
 				if (!reader.isCurrent()) { // IndexReader已经改变
 
-					reader.reopen(true); // 重新打开IndexReader
+					reader = IndexReader.openIfChanged(reader);
+
+					searcher = new IndexSearcher(reader);
+
+					SEARCHER.put(path, searcher);
 
 				}
 
@@ -212,7 +216,7 @@ public class SearchTable {
 		} catch (ParseException ex) {
 
 			ex.printStackTrace();
-			
+
 			query = null;
 
 			return null;
