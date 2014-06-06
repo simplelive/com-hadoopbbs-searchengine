@@ -34,9 +34,9 @@ public class SearchFiles {
 
 		SearchFiles searchFiles = new SearchFiles();
 
-		String docsPath = "d:/news";
+		String docsPath = "/news";
 
-		String indexPath = "d:/index/news";
+		String indexPath = "/index/news";
 
 		System.out.println(docsPath + " index start ... ");
 

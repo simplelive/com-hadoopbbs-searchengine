@@ -312,7 +312,7 @@ public class SearchTable {
 
 		System.out.println("search start ...");
 
-		String indexBase = "d:/index/shop";
+		String indexBase = "/index/shop";
 
 		String table = "article";
 
