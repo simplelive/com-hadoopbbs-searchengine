@@ -142,11 +142,11 @@ public class SearchFiles {
 	 * 搜索文件，按指定索引目录，关键字，搜索结果最多文件数
 	 * 
 	 * @param indexPath
-	 *          索引目录
+	 *            索引目录
 	 * @param queries
-	 *          关键字
+	 *            关键字
 	 * @param top
-	 *          最多文件数
+	 *            最多文件数
 	 * @return
 	 */
 	public String[] search(File indexPath, String queries, int top) {
@@ -176,7 +176,8 @@ public class SearchFiles {
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
 
-		QueryParser parser = new QueryParser(Version.LUCENE_36, "value", analyzer);
+		QueryParser parser = new QueryParser(Version.LUCENE_36, "value",
+				analyzer);
 
 		Query query = null;
 

@@ -62,15 +62,16 @@ public class IndexFiles {
 	 * 索引文本或HTML文件，指定文档及索引目录，以及是否新建索引
 	 * 
 	 * @param docsPath
-	 *          文档目录
+	 *            文档目录
 	 * @param indexPath
-	 *          索引目录
+	 *            索引目录
 	 * @param create
-	 *          是否新建索引
+	 *            是否新建索引
 	 */
 	public void index(File docsPath, File indexPath, boolean create) {
 
-		if (docsPath == null || !docsPath.exists() || !docsPath.canRead() || indexPath == null) {
+		if (docsPath == null || !docsPath.exists() || !docsPath.canRead()
+				|| indexPath == null) {
 
 			return;
 
@@ -96,7 +97,8 @@ public class IndexFiles {
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
 
-		IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_36, analyzer);
+		IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_36,
+				analyzer);
 
 		if (create) {
 
@@ -175,14 +177,16 @@ public class IndexFiles {
 	}
 
 	/**
-	 * Indexes the given file using the given writer, or if a directory is given,
-	 * recurses over files and directories found under the given directory.
+	 * Indexes the given file using the given writer, or if a directory is
+	 * given, recurses over files and directories found under the given
+	 * directory.
 	 * 
 	 * @param writer
-	 *          Writer to the index where the given file/dir info will be stored
+	 *            Writer to the index where the given file/dir info will be
+	 *            stored
 	 * @param file
-	 *          The file to index, or the directory to recurse into to find files
-	 *          to index
+	 *            The file to index, or the directory to recurse into to find
+	 *            files to index
 	 * @throws IOException
 	 */
 	public void index(IndexWriter writer, File file) throws IOException {
@@ -267,7 +271,8 @@ public class IndexFiles {
 		// field that is indexed (i.e. searchable), but don't tokenize
 		// the field into separate words and don't index term frequency
 		// or positional information:
-		Field pathField = new Field("key", file.getPath(), Field.Store.YES, Field.Index.ANALYZED_NO_NORMS);
+		Field pathField = new Field("key", file.getPath(), Field.Store.YES,
+				Field.Index.ANALYZED_NO_NORMS);
 
 		pathField.setIndexOptions(IndexOptions.DOCS_ONLY);
 
@@ -294,7 +299,8 @@ public class IndexFiles {
 		// stored.
 		// Note that FileReader expects the file to be in UTF-8 encoding.
 		// If that's not the case searching for special characters will fail.
-		doc.add(new Field("value", value, Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.NO));
+		doc.add(new Field("value", value, Field.Store.NO, Field.Index.ANALYZED,
+				Field.TermVector.NO));
 
 		if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 

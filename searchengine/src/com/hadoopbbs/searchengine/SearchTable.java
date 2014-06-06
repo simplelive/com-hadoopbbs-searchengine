@@ -123,15 +123,20 @@ public class SearchTable {
 
 	}
 
-	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName) throws IOException, ParseException {
+	public String[] search(File indexBase, String table, String queries,
+			String[] colNames, String keyName) throws IOException,
+			ParseException {
 
 		return search(indexBase, table, queries, colNames, keyName, false);
 
 	}
 
-	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName, boolean and) throws IOException, ParseException {
+	public String[] search(File indexBase, String table, String queries,
+			String[] colNames, String keyName, boolean and) throws IOException,
+			ParseException {
 
-		return search(indexBase, table, queries, colNames, keyName, and, topDocs);
+		return search(indexBase, table, queries, colNames, keyName, and,
+				topDocs);
 
 	}
 
@@ -139,26 +144,30 @@ public class SearchTable {
 	 * 搜索表，按指定的上级索引目录，表名，搜索关键字，列名数组，主键名，是否全部列都包含关键字(AND操作)，最多返回结果数
 	 * 
 	 * @param indexBase
-	 *          上级索引目录
+	 *            上级索引目录
 	 * @param table
-	 *          表名
+	 *            表名
 	 * @param queries
-	 *          搜索关键字
+	 *            搜索关键字
 	 * @param colNames
-	 *          列名数组
+	 *            列名数组
 	 * @param keyName
-	 *          主键名
+	 *            主键名
 	 * @param and
-	 *          是否全部列都包含关键字(AND操作)
+	 *            是否全部列都包含关键字(AND操作)
 	 * @param top
-	 *          最多返回结果数
+	 *            最多返回结果数
 	 * @return 键值数组，或null
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) {
+	public String[] search(File indexBase, String table, String queries,
+			String[] colNames, String keyName, boolean and, int top) {
 
-		if (indexBase == null || table == null || table.length() == 0 || queries == null || queries.length() == 0 || colNames == null || colNames.length == 0 || keyName == null || keyName.length() == 0) {
+		if (indexBase == null || table == null || table.length() == 0
+				|| queries == null || queries.length() == 0 || colNames == null
+				|| colNames.length == 0 || keyName == null
+				|| keyName.length() == 0) {
 
 			return null;
 
@@ -170,7 +179,8 @@ public class SearchTable {
 
 		keyName = keyName.trim();
 
-		if (table.length() == 0 || queries.length() == 0 || keyName.length() == 0) {
+		if (table.length() == 0 || queries.length() == 0
+				|| keyName.length() == 0) {
 
 			return null;
 
@@ -211,7 +221,8 @@ public class SearchTable {
 
 		try {
 
-			query = MultiFieldQueryParser.parse(Version.LUCENE_36, QueryParser.escape(queries), colNames, clauses, analyzer);
+			query = MultiFieldQueryParser.parse(Version.LUCENE_36,
+					QueryParser.escape(queries), colNames, clauses, analyzer);
 
 		} catch (ParseException ex) {
 
@@ -283,21 +294,29 @@ public class SearchTable {
 
 	}
 
-	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName) throws CorruptIndexException, IOException, ParseException {
+	public String[] search(String indexBase, String table, String queries,
+			String[] colNames, String keyName) throws CorruptIndexException,
+			IOException, ParseException {
 
 		return search(indexBase, table, queries, colNames, keyName, false);
 
 	}
 
-	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName, boolean and) throws CorruptIndexException, IOException, ParseException {
+	public String[] search(String indexBase, String table, String queries,
+			String[] colNames, String keyName, boolean and)
+			throws CorruptIndexException, IOException, ParseException {
 
-		return search(indexBase, table, queries, colNames, keyName, and, topDocs);
+		return search(indexBase, table, queries, colNames, keyName, and,
+				topDocs);
 
 	}
 
-	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) throws CorruptIndexException, IOException, ParseException {
+	public String[] search(String indexBase, String table, String queries,
+			String[] colNames, String keyName, boolean and, int top)
+			throws CorruptIndexException, IOException, ParseException {
 
-		return search(new File(indexBase), table, queries, colNames, keyName, and, top);
+		return search(new File(indexBase), table, queries, colNames, keyName,
+				and, top);
 
 	}
 
@@ -308,7 +327,8 @@ public class SearchTable {
 	}
 
 	// 测试
-	public void test() throws CorruptIndexException, IOException, ParseException, SQLException {
+	public void test() throws CorruptIndexException, IOException,
+			ParseException, SQLException {
 
 		System.out.println("search start ...");
 
@@ -326,7 +346,8 @@ public class SearchTable {
 
 		System.out.println("queries:\t" + queries);
 
-		String[] keyValues = search(indexBase, table, queries, colNames, keyName, false);
+		String[] keyValues = search(indexBase, table, queries, colNames,
+				keyName, false);
 
 		for (int i = 0; i < 3; i++) {
 
@@ -334,7 +355,8 @@ public class SearchTable {
 
 			System.out.println("queries:\t" + queries);
 
-			keyValues = search(indexBase, table, queries, colNames, keyName, false);
+			keyValues = search(indexBase, table, queries, colNames, keyName,
+					false);
 
 		}
 
