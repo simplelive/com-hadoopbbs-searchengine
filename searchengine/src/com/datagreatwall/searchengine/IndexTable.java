@@ -23,7 +23,6 @@ import org.jsoup.Jsoup;
 
 import com.datagreatwall.database.Database;
 
-
 /**
  * 
  * 索引数据库表
@@ -68,22 +67,19 @@ public class IndexTable {
 
 	}
 
-	public void index(File indexBase, String table, String[] colNames,
-			String keyName) {
+	public void index(File indexBase, String table, String[] colNames, String keyName) {
 
 		index(indexBase, table, colNames, keyName, true);
 
 	}
 
-	public void index(File indexBase, String table, String[] colNames,
-			String keyName, boolean create) {
+	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create) {
 
 		index(indexBase, table, colNames, keyName, create, null);
 
 	}
 
-	public void index(File indexBase, String table, String[] colNames,
-			String keyName, boolean create, String keyStart) {
+	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart) {
 
 		index(indexBase, table, colNames, keyName, create, keyStart, 0);
 
@@ -109,12 +105,9 @@ public class IndexTable {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void index(File indexBase, String table, String[] colNames,
-			String keyName, boolean create, String keyStart, int rowCount) {
+	public void index(File indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart, int rowCount) {
 
-		if (indexBase == null || table == null || table.length() == 0
-				|| keyName == null || keyName.length() == 0 || colNames == null
-				|| colNames.length == 0) {
+		if (indexBase == null || table == null || table.length() == 0 || keyName == null || keyName.length() == 0 || colNames == null || colNames.length == 0) {
 
 			return;
 
@@ -140,8 +133,7 @@ public class IndexTable {
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
 
-		IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_36,
-				analyzer);
+		IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_36, analyzer);
 
 		if (create) {
 
@@ -235,13 +227,9 @@ public class IndexTable {
 	 *            列值数组
 	 * @throws IOException
 	 */
-	public void index(IndexWriter writer, String keyName, String keyValue,
-			String[] colNames, String[] colValues) throws IOException {
+	public void index(IndexWriter writer, String keyName, String keyValue, String[] colNames, String[] colValues) throws IOException {
 
-		if (writer == null || keyName == null || keyName.length() == 0
-				|| keyValue == null || keyValue.length() == 0
-				|| colNames == null || colNames.length == 0
-				|| colValues == null || colValues.length == 0) {
+		if (writer == null || keyName == null || keyName.length() == 0 || keyValue == null || keyValue.length() == 0 || colNames == null || colNames.length == 0 || colValues == null || colValues.length == 0) {
 
 			return;
 
@@ -250,8 +238,7 @@ public class IndexTable {
 		Document doc = new Document();
 
 		// KEY
-		Field keyField = new Field(keyName.toLowerCase(), keyValue,
-				Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
+		Field keyField = new Field(keyName.toLowerCase(), keyValue, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
 
 		keyField.setIndexOptions(IndexOptions.DOCS_ONLY);
 
@@ -267,9 +254,7 @@ public class IndexTable {
 				// System.out.println(colValues[i]);
 
 				// 字段内容
-				Field colField = new Field(colNames[i].toLowerCase(),
-						colValues[i], Field.Store.NO, Field.Index.ANALYZED,
-						Field.TermVector.NO);
+				Field colField = new Field(colNames[i].toLowerCase(), colValues[i], Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.NO);
 
 				doc.add(colField);
 
@@ -292,15 +277,13 @@ public class IndexTable {
 
 	}
 
-	public void index(IndexWriter writer, String table, String[] colNames,
-			String keyName) throws IOException, SQLException {
+	public void index(IndexWriter writer, String table, String[] colNames, String keyName) throws IOException, SQLException {
 
 		index(writer, table, colNames, keyName, null, 0);
 
 	}
 
-	public void index(IndexWriter writer, String table, String[] colNames,
-			String keyName, String keyStart) throws IOException, SQLException {
+	public void index(IndexWriter writer, String table, String[] colNames, String keyName, String keyStart) throws IOException, SQLException {
 
 		index(writer, table, colNames, keyName, keyStart, 0);
 
@@ -324,13 +307,9 @@ public class IndexTable {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void index(IndexWriter writer, String table, String[] colNames,
-			String keyName, String keyStart, int maxRows) throws IOException,
-			SQLException {
+	public void index(IndexWriter writer, String table, String[] colNames, String keyName, String keyStart, int maxRows) throws IOException, SQLException {
 
-		if (writer == null || table == null || table.length() == 0
-				|| keyName == null || keyName.length() == 0 || colNames == null
-				|| colNames.length == 0) {
+		if (writer == null || table == null || table.length() == 0 || keyName == null || keyName.length() == 0 || colNames == null || colNames.length == 0) {
 
 			return;
 
@@ -460,32 +439,27 @@ public class IndexTable {
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames,
-			String keyName) {
+	public void index(String indexBase, String table, String[] colNames, String keyName) {
 
 		index(indexBase, table, colNames, keyName, true);
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames,
-			String keyName, boolean create) {
+	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create) {
 
 		index(indexBase, table, colNames, keyName, create, null);
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames,
-			String keyName, boolean create, String keyStart) {
+	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart) {
 
 		index(indexBase, table, colNames, keyName, create, keyStart, 0);
 
 	}
 
-	public void index(String indexBase, String table, String[] colNames,
-			String keyName, boolean create, String keyStart, int rowCount) {
+	public void index(String indexBase, String table, String[] colNames, String keyName, boolean create, String keyStart, int rowCount) {
 
-		index(new File(indexBase), table, colNames, keyName, create, keyStart,
-				rowCount);
+		index(new File(indexBase), table, colNames, keyName, create, keyStart, rowCount);
 
 	}
 

@@ -71,8 +71,7 @@ public class IndexFiles {
 	 */
 	public void index(File docsPath, File indexPath, boolean create) {
 
-		if (docsPath == null || !docsPath.exists() || !docsPath.canRead()
-				|| indexPath == null) {
+		if (docsPath == null || !docsPath.exists() || !docsPath.canRead() || indexPath == null) {
 
 			return;
 
@@ -98,8 +97,7 @@ public class IndexFiles {
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
 
-		IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_36,
-				analyzer);
+		IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_36, analyzer);
 
 		if (create) {
 
@@ -272,8 +270,7 @@ public class IndexFiles {
 		// field that is indexed (i.e. searchable), but don't tokenize
 		// the field into separate words and don't index term frequency
 		// or positional information:
-		Field pathField = new Field("key", file.getPath(), Field.Store.YES,
-				Field.Index.ANALYZED_NO_NORMS);
+		Field pathField = new Field("key", file.getPath(), Field.Store.YES, Field.Index.ANALYZED_NO_NORMS);
 
 		pathField.setIndexOptions(IndexOptions.DOCS_ONLY);
 
@@ -300,8 +297,7 @@ public class IndexFiles {
 		// stored.
 		// Note that FileReader expects the file to be in UTF-8 encoding.
 		// If that's not the case searching for special characters will fail.
-		doc.add(new Field("value", value, Field.Store.NO, Field.Index.ANALYZED,
-				Field.TermVector.NO));
+		doc.add(new Field("value", value, Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.NO));
 
 		if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 

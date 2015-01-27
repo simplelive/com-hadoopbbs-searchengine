@@ -176,8 +176,7 @@ public class SearchFiles {
 		// Analyzer analyzer = new IKAnalyzer();
 		Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_36);
 
-		QueryParser parser = new QueryParser(Version.LUCENE_36, "value",
-				analyzer);
+		QueryParser parser = new QueryParser(Version.LUCENE_36, "value", analyzer);
 
 		Query query = null;
 

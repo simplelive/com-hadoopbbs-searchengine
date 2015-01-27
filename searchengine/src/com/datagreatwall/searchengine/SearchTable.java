@@ -24,7 +24,6 @@ import org.apache.lucene.util.Version;
 
 import com.datagreatwall.database.Database;
 
-
 /**
  * 
  * 搜索数据库表
@@ -124,20 +123,15 @@ public class SearchTable {
 
 	}
 
-	public String[] search(File indexBase, String table, String queries,
-			String[] colNames, String keyName) throws IOException,
-			ParseException {
+	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName) throws IOException, ParseException {
 
 		return search(indexBase, table, queries, colNames, keyName, false);
 
 	}
 
-	public String[] search(File indexBase, String table, String queries,
-			String[] colNames, String keyName, boolean and) throws IOException,
-			ParseException {
+	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName, boolean and) throws IOException, ParseException {
 
-		return search(indexBase, table, queries, colNames, keyName, and,
-				topDocs);
+		return search(indexBase, table, queries, colNames, keyName, and, topDocs);
 
 	}
 
@@ -162,13 +156,9 @@ public class SearchTable {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public String[] search(File indexBase, String table, String queries,
-			String[] colNames, String keyName, boolean and, int top) {
+	public String[] search(File indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) {
 
-		if (indexBase == null || table == null || table.length() == 0
-				|| queries == null || queries.length() == 0 || colNames == null
-				|| colNames.length == 0 || keyName == null
-				|| keyName.length() == 0) {
+		if (indexBase == null || table == null || table.length() == 0 || queries == null || queries.length() == 0 || colNames == null || colNames.length == 0 || keyName == null || keyName.length() == 0) {
 
 			return null;
 
@@ -180,8 +170,7 @@ public class SearchTable {
 
 		keyName = keyName.trim();
 
-		if (table.length() == 0 || queries.length() == 0
-				|| keyName.length() == 0) {
+		if (table.length() == 0 || queries.length() == 0 || keyName.length() == 0) {
 
 			return null;
 
@@ -222,8 +211,7 @@ public class SearchTable {
 
 		try {
 
-			query = MultiFieldQueryParser.parse(Version.LUCENE_36,
-					QueryParser.escape(queries), colNames, clauses, analyzer);
+			query = MultiFieldQueryParser.parse(Version.LUCENE_36, QueryParser.escape(queries), colNames, clauses, analyzer);
 
 		} catch (ParseException ex) {
 
@@ -295,29 +283,21 @@ public class SearchTable {
 
 	}
 
-	public String[] search(String indexBase, String table, String queries,
-			String[] colNames, String keyName) throws CorruptIndexException,
-			IOException, ParseException {
+	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName) throws CorruptIndexException, IOException, ParseException {
 
 		return search(indexBase, table, queries, colNames, keyName, false);
 
 	}
 
-	public String[] search(String indexBase, String table, String queries,
-			String[] colNames, String keyName, boolean and)
-			throws CorruptIndexException, IOException, ParseException {
+	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName, boolean and) throws CorruptIndexException, IOException, ParseException {
 
-		return search(indexBase, table, queries, colNames, keyName, and,
-				topDocs);
+		return search(indexBase, table, queries, colNames, keyName, and, topDocs);
 
 	}
 
-	public String[] search(String indexBase, String table, String queries,
-			String[] colNames, String keyName, boolean and, int top)
-			throws CorruptIndexException, IOException, ParseException {
+	public String[] search(String indexBase, String table, String queries, String[] colNames, String keyName, boolean and, int top) throws CorruptIndexException, IOException, ParseException {
 
-		return search(new File(indexBase), table, queries, colNames, keyName,
-				and, top);
+		return search(new File(indexBase), table, queries, colNames, keyName, and, top);
 
 	}
 
@@ -328,8 +308,7 @@ public class SearchTable {
 	}
 
 	// 测试
-	public void test() throws CorruptIndexException, IOException,
-			ParseException, SQLException {
+	public void test() throws CorruptIndexException, IOException, ParseException, SQLException {
 
 		System.out.println("search start ...");
 
@@ -347,8 +326,7 @@ public class SearchTable {
 
 		System.out.println("queries:\t" + queries);
 
-		String[] keyValues = search(indexBase, table, queries, colNames,
-				keyName, false);
+		String[] keyValues = search(indexBase, table, queries, colNames, keyName, false);
 
 		for (int i = 0; i < 3; i++) {
 
@@ -356,8 +334,7 @@ public class SearchTable {
 
 			System.out.println("queries:\t" + queries);
 
-			keyValues = search(indexBase, table, queries, colNames, keyName,
-					false);
+			keyValues = search(indexBase, table, queries, colNames, keyName, false);
 
 		}
 
